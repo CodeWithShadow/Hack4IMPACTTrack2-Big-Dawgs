@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 const genAI = new GoogleGenerativeAI(apiKey);
-const model = apiKey ? genAI.getGenerativeModel({ model: 'gemini-1.5-flash' }) : null;
+const model = apiKey ? genAI.getGenerativeModel({ model: 'gemini-2.0-flash' }) : null;
 
 const OFFLINE_CACHE_KEY = 'farmflux_gemini_cache';
 

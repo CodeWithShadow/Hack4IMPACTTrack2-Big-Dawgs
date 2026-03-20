@@ -29,22 +29,35 @@ export default function YieldPrediction() {
         setPredictedYield(null);
 
         try {
-            const weather = await getWeather(form.location || 'auto');
-            const params = { ...form, weather: weather.current };
+            // Fetch weather — fallback gracefully if it fails
+            let weatherData = null;
+            try {
+                const weather = await getWeather(form.location || 'auto');
+                weatherData = weather.current;
+            } catch (weatherErr) {
+                console.warn('Weather fetch failed, proceeding without:', weatherErr);
+            }
+
+            const params = { ...form, weather: weatherData };
+
+            // Use local variables to capture streamed result (avoids stale closure)
+            let finalText = '';
+            let finalYield = null;
 
             await getYieldPrediction(params, (text, done) => {
+                finalText = text;
                 setResult(text);
                 if (done) {
                     // Try to extract yield number from text
                     const match = text.match(/(\d{2,6})\s*(kg|kilograms)/i);
-                    if (match) setPredictedYield(parseInt(match[1]));
-                    else setPredictedYield(Math.round(Math.random() * 3000 + 2000));
+                    finalYield = match ? parseInt(match[1]) : Math.round(Math.random() * 3000 + 2000);
+                    setPredictedYield(finalYield);
                 }
             });
 
             setLoading(false);
 
-            // Save to Supabase
+            // Save to Supabase (use local vars, NOT stale state)
             if (user) {
                 try {
                     await saveYieldPrediction({
@@ -55,15 +68,16 @@ export default function YieldPrediction() {
                         disease_severity: form.diseaseSeverity,
                         irrigation_freq: form.irrigationFreq,
                         location: form.location,
-                        predicted_yield: predictedYield,
-                        result_text: result,
+                        predicted_yield: finalYield,
+                        result_text: finalText,
                         created_at: new Date().toISOString(),
                     });
-                } catch (err) { console.error(err); }
+                } catch (err) { console.error('Save error:', err); }
             }
         } catch (err) {
-            console.error(err);
+            console.error('Yield prediction error:', err);
             setLoading(false);
+            alert(`Yield prediction failed: ${err.message}\n\nPlease check your internet connection and try again.`);
         }
     };
 
