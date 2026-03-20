@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───── Grain/Noise Texture Overlay ───── */
+@layer base {
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    animation: grain 0.5s steps(10) infinite;
+    opacity: 0.4;
+  }
+}
+
+/* ───── Animated Gradient Mesh Background ───── */
+.gradient-mesh {
+  background: linear-gradient(
+    -45deg,
+    #0A1A0F,
+    #0F2318,
+    #112A1A,
+    #0A1A0F,
+    #1A3A25
+  );
+  background-size: 300% 300%;
+  animation: gradientMesh 15s ease infinite;
+}
+
+/* ───── Scrollbar ───── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A1A0F;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A3A25;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4ADE80;
+}
+
+/* ───── Button Fill Animation ───── */
+.btn-fill {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+}
+.btn-fill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: #4ADE80;
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+.btn-fill:hover::before {
+  left: 0;
+}
+.btn-fill:hover {
+  color: #0A1A0F;
+}
+
+/* ───── Card Hover Glow ───── */
+.card-glow {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-glow:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(74, 222, 128, 0.15), 0 0 60px rgba(74, 222, 128, 0.05);
+}
+
+/* ───── Input Focus Animation ───── */
+.input-animated {
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease;
+  background: rgba(17, 42, 26, 0.5);
+}
+.input-animated:focus {
+  border-color: #4ADE80;
+  outline: none;
+}
+
+/* ───── Diagonal Section Divider ───── */
+.diagonal-top {
+  clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%);
+}
+.diagonal-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+}
+
+/* ───── Thick Left Border Accent ───── */
+.left-accent {
+  border-left: 4px solid #4ADE80;
+}
+
+/* ───── Pulse Marker (for map) ───── */
+@keyframes pulseMarker {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+.pulse-marker {
+  animation: pulseMarker 2s ease-out infinite;
+}
+
+/* ───── Progress Ring ───── */
+.progress-ring-circle {
+  transition: stroke-dashoffset 1s ease-in-out;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* ───── Typewriter ───── */
+.typewriter-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: #4ADE80;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ───── Floating Particles ───── */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(74, 222, 128, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* ───── Glassmorphism ───── */
+.glass {
+  background: rgba(17, 42, 26, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 222, 128, 0.1);
+}
+
+/* ───── Leaflet Overrides ───── */
+.leaflet-container {
+  background: #0A1A0F !important;
+}
+.leaflet-popup-content-wrapper {
+  background: #112A1A !important;
+  color: #F0FDF4 !important;
+  border: 1px solid #1A3A25;
+  border-radius: 4px !important;
+}
+.leaflet-popup-tip {
+  background: #112A1A !important;
+}
+
+/* ───── Custom Selection ───── */
+::selection {
+  background: rgba(74, 222, 128, 0.3);
+  color: #F0FDF4;
+}
+
+/* ───── Carousel Horizontal Scroll ───── */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap-x > * {
+  scroll-snap-align: start;
+}
+
+/* ───── Hide scrollbar for carousels ───── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
