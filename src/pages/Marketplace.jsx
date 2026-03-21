@@ -4,13 +4,14 @@ import PageWrapper, { staggerContainer, staggerItem } from '../components/layout
 import ListingCard from '../components/marketplace/ListingCard';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import useStore from '../store/useStore';
+import PurchaseModal from '../components/marketplace/PurchaseModal';
 import { getListings, getMyListings, createListing, uploadCropImage, deleteListing } from '../services/supabase';
 import { getMarketplacePriceSuggestion } from '../services/gemini';
 import { CROPS } from '../utils/cropRecommendations';
 import { Plus, X, Sparkles, Filter } from 'lucide-react';
 
 export default function Marketplace() {
-    const { user, listings, myListings, setListings, setMyListings } = useStore();
+    const { user, listings, myListings, setListings, setMyListings, addNotification } = useStore();
     const [tab, setTab] = useState('browse');
     const [loading, setLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
@@ -19,6 +20,7 @@ export default function Marketplace() {
     const [submitting, setSubmitting] = useState(false);
     const [aiPrice, setAiPrice] = useState(null);
     const [filter, setFilter] = useState({ crop_type: '' });
+    const [selectedListingForPurchase, setSelectedListingForPurchase] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -85,30 +87,52 @@ export default function Marketplace() {
         } catch (err) { console.error(err); }
     };
 
-    const inputClass = "w-full px-4 py-3 bg-farm-bg border border-farm-border rounded-lg text-farm-text font-dm text-sm input-animated";
-    const labelClass = "text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
+    const handlePurchaseComplete = async (id) => {
+        try {
+            await deleteListing(id);
+            
+            if (selectedListingForPurchase) {
+                addNotification({
+                    type: 'buy',
+                    title: 'Purchase Successful',
+                    message: `You bought ${selectedListingForPurchase.quantity}${selectedListingForPurchase.unit} of ${selectedListingForPurchase.crop_name}.`
+                });
+                addNotification({
+                    type: 'sell',
+                    title: 'Item Sold (Simulated)',
+                    message: `Your listing for ${selectedListingForPurchase.quantity}${selectedListingForPurchase.unit} of ${selectedListingForPurchase.crop_name} was bought.`
+                });
+            }
+
+            setSelectedListingForPurchase(null);
+            loadData();
+        } catch (err) { console.error(err); }
+    };
+
+    const inputClass = "w-full px-4 py-3 bg-fm-bg-base border border-fm-border rounded-lg text-fm-text-primary font-dm text-sm input-animated";
+    const labelClass = "text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
 
     return (
         <PageWrapper>
             <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-6xl mx-auto space-y-8">
                 <motion.div variants={staggerItem} className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                     <div>
-                        <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">Trade</p>
-                        <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
-                            Market<span className="text-farm-accent">place</span>
+                        <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">Trade</p>
+                        <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
+                            Market<span className="text-fm-accent">place</span>
                         </h1>
                     </div>
                     <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowForm(true)}
-                        className="flex items-center gap-2 px-6 py-3 bg-farm-accent text-farm-bg font-syne font-bold rounded-lg">
+                        className="flex items-center gap-2 px-6 py-3 bg-fm-accent text-fm-bg-base font-syne font-bold rounded-lg">
                         <Plus className="w-5 h-5" />Create Listing
                     </motion.button>
                 </motion.div>
 
                 {/* Tabs */}
-                <motion.div variants={staggerItem} className="flex gap-1 bg-farm-card rounded-lg p-1">
+                <motion.div variants={staggerItem} className="flex gap-1 bg-fm-bg-elevated rounded-lg p-1">
                     {['browse', 'my'].map((t) => (
                         <button key={t} onClick={() => setTab(t)}
-                            className={`flex-1 py-2.5 rounded-md text-sm font-dm font-medium transition-all ${tab === t ? 'bg-farm-accent text-farm-bg' : 'text-farm-text-muted hover:text-farm-text'}`}>
+                            className={`flex-1 py-2.5 rounded-md text-sm font-dm font-medium transition-all ${tab === t ? 'bg-fm-accent text-fm-bg-base' : 'text-fm-text-muted hover:text-fm-text-primary'}`}>
                             {t === 'browse' ? 'Browse Listings' : 'My Listings'}
                         </button>
                     ))}
@@ -117,9 +141,9 @@ export default function Marketplace() {
                 {/* Filter */}
                 {tab === 'browse' && (
                     <motion.div variants={staggerItem} className="flex gap-3 items-center">
-                        <Filter className="w-4 h-4 text-farm-text-muted" />
+                        <Filter className="w-4 h-4 text-fm-text-muted" />
                         <select value={filter.crop_type} onChange={(e) => { setFilter({ crop_type: e.target.value }); }}
-                            className="px-3 py-2 bg-farm-card border border-farm-border rounded-lg text-sm text-farm-text font-dm">
+                            className="px-3 py-2 bg-fm-bg-elevated border border-fm-border rounded-lg text-sm text-fm-text-primary font-dm">
                             <option value="">All Crops</option>
                             {CROPS.map((c) => <option key={c.name} value={c.name}>{c.name}</option>)}
                         </select>
@@ -131,7 +155,12 @@ export default function Marketplace() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {(tab === 'browse' ? listings : myListings).map((listing, i) => (
                             <div key={listing.id || i} className="relative">
-                                <ListingCard listing={listing} index={i} />
+                                <ListingCard 
+                                    listing={listing} 
+                                    index={i} 
+                                    isOwner={user?.id === listing.user_id}
+                                    onBuyClick={(item) => setSelectedListingForPurchase(item)} 
+                                />
                                 {tab === 'my' && (
                                     <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleDelete(listing.id)}
                                         className="absolute top-2 right-2 w-8 h-8 rounded-full bg-farm-danger/80 flex items-center justify-center text-white z-10">
@@ -141,7 +170,7 @@ export default function Marketplace() {
                             </div>
                         ))}
                         {(tab === 'browse' ? listings : myListings).length === 0 && (
-                            <p className="col-span-full text-center text-farm-text-muted py-12 font-dm">No listings found.</p>
+                            <p className="col-span-full text-center text-fm-text-muted py-12 font-dm">No listings found.</p>
                         )}
                     </div>
                 )}
@@ -152,10 +181,10 @@ export default function Marketplace() {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)}>
                             <motion.div initial={{ scale: 0.9, y: 30 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 30 }}
-                                className="bg-farm-bg-secondary border border-farm-border rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                                className="bg-fm-bg-surface border border-fm-border rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                                 <div className="flex items-center justify-between mb-6">
-                                    <h2 className="font-syne font-bold text-xl text-farm-text">New Listing</h2>
-                                    <button onClick={() => setShowForm(false)} className="text-farm-text-muted hover:text-farm-text"><X className="w-5 h-5" /></button>
+                                    <h2 className="font-syne font-bold text-xl text-fm-text-primary">New Listing</h2>
+                                    <button onClick={() => setShowForm(false)} className="text-fm-text-muted hover:text-fm-text-primary"><X className="w-5 h-5" /></button>
                                 </div>
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
@@ -177,23 +206,23 @@ export default function Marketplace() {
                                         <div className="flex items-center justify-between mb-1.5">
                                             <label className={labelClass}>Price (₹)</label>
                                             <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleGetAIPrice}
-                                                className="flex items-center gap-1 text-xs text-farm-accent hover:underline">
+                                                className="flex items-center gap-1 text-xs text-fm-accent hover:underline">
                                                 <Sparkles className="w-3 h-3" />AI Suggest
                                             </motion.button>
                                         </div>
                                         <input type="number" value={form.price} onChange={(e) => handleChange('price', e.target.value)} required className={inputClass} />
-                                        {aiPrice && <p className="text-xs text-farm-accent mt-1 font-mono">AI: ₹{aiPrice.minPrice}–₹{aiPrice.maxPrice} ({aiPrice.reasoning})</p>}
+                                        {aiPrice && <p className="text-xs text-fm-accent mt-1 font-mono">AI: ₹{aiPrice.minPrice}–₹{aiPrice.maxPrice} ({aiPrice.reasoning})</p>}
                                     </div>
                                     <div>
                                         <label className={labelClass}>Image</label>
-                                        <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="text-sm text-farm-text-muted" />
+                                        <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="text-sm text-fm-text-muted" />
                                     </div>
                                     <label className="flex items-center gap-2 cursor-pointer">
-                                        <input type="checkbox" checked={form.is_surplus} onChange={(e) => handleChange('is_surplus', e.target.checked)} className="accent-farm-accent" />
-                                        <span className="text-sm text-farm-text-secondary">Mark as surplus (connect with NGOs)</span>
+                                        <input type="checkbox" checked={form.is_surplus} onChange={(e) => handleChange('is_surplus', e.target.checked)} className="accent-fm-accent" />
+                                        <span className="text-sm text-fm-text-secondary">Mark as surplus (connect with NGOs)</span>
                                     </label>
                                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={submitting}
-                                        className="w-full py-3 bg-farm-accent text-farm-bg font-syne font-bold rounded-lg disabled:opacity-50">
+                                        className="w-full py-3 bg-fm-accent text-fm-bg-base font-syne font-bold rounded-lg disabled:opacity-50">
                                         {submitting ? 'Creating...' : 'Create Listing'}
                                     </motion.button>
                                 </form>
@@ -202,6 +231,16 @@ export default function Marketplace() {
                     )}
                 </AnimatePresence>
             </motion.div>
+
+            <AnimatePresence>
+                {selectedListingForPurchase && (
+                    <PurchaseModal 
+                        listing={selectedListingForPurchase}
+                        onClose={() => setSelectedListingForPurchase(null)}
+                        onComplete={handlePurchaseComplete}
+                    />
+                )}
+            </AnimatePresence>
         </PageWrapper>
     );
 }

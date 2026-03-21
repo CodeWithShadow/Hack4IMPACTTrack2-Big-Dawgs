@@ -2,8 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ───── Grain/Noise Texture Overlay ───── */
 @layer base {
+  :root {
+    /* backgrounds */
+    --fm-bg-base:        #EFF5F0;
+    --fm-bg-surface:     #E2EEE4;
+    --fm-bg-elevated:    #CDE3CF;
+    --fm-bg-subtle:      #B8D9BC;
+
+    /* accent */
+    --fm-accent:         #22623A;
+    --fm-accent-hover:   #1A4D2D;
+    --fm-accent-deep:    #0F3D1E;
+    --fm-accent-muted:   #C8E4D4;
+
+    /* text */
+    --fm-text-primary:   #1A3020;
+    --fm-text-secondary: #3D5344;
+    --fm-text-muted:     #5A7A62;
+    --fm-text-accent:    #22623A;
+
+    /* borders */
+    --fm-border-default: #C8DEC9;
+    --fm-border-strong:  #A8C8AB;
+
+    /* stat accents */
+    --fm-stat-analyses:  #22623A;
+    --fm-stat-disease:   #B85C44;
+    --fm-stat-crops:     #C49A2A;
+    --fm-stat-water:     #3A7DA8;
+  }
+
+  .dark {
+    /* backgrounds */
+    --fm-bg-base:        #1A1814;
+    --fm-bg-surface:     #201E19;
+    --fm-bg-elevated:    #2C2820;
+    --fm-bg-subtle:      #383024;
+
+    /* accent - copper */
+    --fm-accent:         #C27A3A;
+    --fm-accent-hover:   #A8642A;
+    --fm-accent-deep:    #8A4E1E;
+    --fm-accent-muted:   #352510;
+
+    /* text */
+    --fm-text-primary:   #EBE3D8;
+    --fm-text-secondary: #9A9180;
+    --fm-text-muted:     #6A6258;
+    --fm-text-accent:    #C27A3A;
+
+    /* borders */
+    --fm-border-default: #3A3228;
+    --fm-border-strong:  #5A5040;
+
+    /* stat accents */
+    --fm-stat-analyses:  #C27A3A;
+    --fm-stat-disease:   #B85C5C;
+    --fm-stat-crops:     #9AB848;
+    --fm-stat-water:     #5A96C4;
+  }
+
+  html {
+    font-size: 14px; /* Globally scales down all rem-based Tailwind utilities */
+  }
+
   body::before {
     content: '';
     position: fixed;
@@ -15,7 +78,7 @@
     pointer-events: none;
     z-index: 9999;
     animation: grain 0.5s steps(10) infinite;
-    opacity: 0.4;
+    opacity: 0.15; /* Reduced noise opacity for light theme */
   }
 }
 
@@ -23,11 +86,11 @@
 .gradient-mesh {
   background: linear-gradient(
     -45deg,
-    #0A1A0F,
-    #0F2318,
-    #112A1A,
-    #0A1A0F,
-    #1A3A25
+    var(--fm-bg-base),
+    var(--fm-bg-surface),
+    var(--fm-bg-elevated),
+    var(--fm-bg-base),
+    var(--fm-bg-subtle)
   );
   background-size: 300% 300%;
   animation: gradientMesh 15s ease infinite;
@@ -38,14 +101,14 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A1A0F;
+  background: var(--fm-bg-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1A3A25;
+  background: var(--fm-border-strong);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4ADE80;
+  background: var(--fm-accent);
 }
 
 /* ───── Button Fill Animation ───── */
@@ -61,7 +124,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: #4ADE80;
+  background: var(--fm-accent);
   transition: left 0.4s ease;
   z-index: -1;
 }
@@ -69,7 +132,7 @@
   left: 0;
 }
 .btn-fill:hover {
-  color: #0A1A0F;
+  color: var(--fm-bg-base);
 }
 
 /* ───── Card Hover Glow ───── */
@@ -78,17 +141,18 @@
 }
 .card-glow:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 30px rgba(74, 222, 128, 0.15), 0 0 60px rgba(74, 222, 128, 0.05);
+  /* rgb(34, 98, 58) equals #22623A */
+  box-shadow: 0 0 30px rgba(34, 98, 58, 0.15), 0 0 60px rgba(34, 98, 58, 0.05);
 }
 
 /* ───── Input Focus Animation ───── */
 .input-animated {
   border-bottom: 2px solid transparent;
   transition: border-color 0.3s ease;
-  background: rgba(17, 42, 26, 0.5);
+  background: var(--fm-bg-surface);
 }
 .input-animated:focus {
-  border-color: #4ADE80;
+  border-color: var(--fm-accent);
   outline: none;
 }
 
@@ -102,7 +166,7 @@
 
 /* ───── Thick Left Border Accent ───── */
 .left-accent {
-  border-left: 4px solid #4ADE80;
+  border-left: 4px solid var(--fm-accent);
 }
 
 /* ───── Pulse Marker (for map) ───── */
@@ -126,7 +190,7 @@
 .typewriter-cursor::after {
   content: '|';
   animation: blink 1s step-end infinite;
-  color: #4ADE80;
+  color: var(--fm-accent);
 }
 @keyframes blink {
   0%, 100% { opacity: 1; }
@@ -138,37 +202,37 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(74, 222, 128, 0.3);
+  background: rgba(34, 98, 58, 0.3);
   border-radius: 50%;
   pointer-events: none;
 }
 
 /* ───── Glassmorphism ───── */
 .glass {
-  background: rgba(17, 42, 26, 0.4);
+  background: rgba(226, 238, 228, 0.6); /* --fm-bg-surface */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(205, 227, 207, 0.5); /* --fm-bg-elevated */
 }
 
 /* ───── Leaflet Overrides ───── */
 .leaflet-container {
-  background: #0A1A0F !important;
+  background: var(--fm-bg-subtle) !important;
 }
 .leaflet-popup-content-wrapper {
-  background: #112A1A !important;
-  color: #F0FDF4 !important;
-  border: 1px solid #1A3A25;
+  background: var(--fm-bg-surface) !important;
+  color: var(--fm-text-primary) !important;
+  border: 1px solid var(--fm-border-default);
   border-radius: 4px !important;
 }
 .leaflet-popup-tip {
-  background: #112A1A !important;
+  background: var(--fm-bg-surface) !important;
 }
 
 /* ───── Custom Selection ───── */
 ::selection {
-  background: rgba(74, 222, 128, 0.3);
-  color: #F0FDF4;
+  background: rgba(34, 98, 58, 0.2);
+  color: var(--fm-text-primary);
 }
 
 /* ───── Carousel Horizontal Scroll ───── */
@@ -183,3 +247,122 @@
 /* ───── Hide scrollbar for carousels ───── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ───── Timeline Dual-Handle Range Slider ───── */
+.timeline-slider-container {
+  position: relative;
+  height: 28px;
+  width: 100%;
+}
+
+.timeline-slider-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: #1A3A25;
+  transform: translateY(-50%);
+}
+
+.timeline-slider-track {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #4ADE80, #22C55E);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.timeline-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline-slider-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4ADE80;
+  border: 3px solid #0A1A0F;
+  cursor: pointer;
+  pointer-events: all;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.timeline-slider-thumb::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.5);
+}
+
+.timeline-slider-thumb::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4ADE80;
+  border: 3px solid #0A1A0F;
+  cursor: pointer;
+  pointer-events: all;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.35);
+}
+
+/* ───── Radius Settings Slider ───── */
+.radius-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #4ADE80, #22C55E);
+  outline: none;
+}
+
+.radius-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4ADE80;
+  border: 3px solid #0A1A0F;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.radius-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.55);
+}
+
+.radius-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4ADE80;
+  border: 3px solid #0A1A0F;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+}
+
+.radius-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #4ADE80, #22C55E);
+}

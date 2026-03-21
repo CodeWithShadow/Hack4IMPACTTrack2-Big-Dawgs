@@ -32,9 +32,9 @@ export default function WeatherWidget() {
 
     if (loading || !weather) {
         return (
-            <div className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg animate-pulse">
-                <div className="h-6 w-32 bg-farm-border rounded mb-4" />
-                <div className="h-16 w-24 bg-farm-border rounded" />
+            <div className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg animate-pulse">
+                <div className="h-6 w-32 bg-fm-border rounded mb-4" />
+                <div className="h-16 w-24 bg-fm-border rounded" />
             </div>
         );
     }
@@ -44,7 +44,7 @@ export default function WeatherWidget() {
     return (
         <motion.div
             variants={staggerItem}
-            className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg relative overflow-hidden"
+            className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg relative overflow-hidden"
         >
             {/* Background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-farm-accent/5 to-transparent pointer-events-none" />
@@ -54,8 +54,8 @@ export default function WeatherWidget() {
                 <div className="flex items-start gap-4">
                     <span className="text-5xl">{current.icon}</span>
                     <div>
-                        <p className="font-mono text-5xl font-bold text-farm-text leading-none">{current.temp}°</p>
-                        <p className="text-sm text-farm-text-muted mt-1 font-dm">{current.description} • {location}</p>
+                        <p className="font-mono text-5xl font-bold text-fm-text-primary leading-none">{current.temp}°</p>
+                        <p className="text-sm text-fm-text-muted mt-1 font-dm">{current.description} • {location}</p>
                     </div>
                 </div>
 
@@ -63,9 +63,9 @@ export default function WeatherWidget() {
                 <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
                         { icon: Droplets, label: 'Humidity', value: `${current.humidity}%`, color: 'text-blue-400' },
-                        { icon: Wind, label: 'Wind', value: `${current.windSpeed} km/h`, color: 'text-farm-text-secondary' },
-                        { icon: Sun, label: 'UV Index', value: current.uvIndex, color: 'text-farm-warm' },
-                        { icon: Gauge, label: 'Pressure', value: `${current.pressure} hPa`, color: 'text-farm-accent-secondary' },
+                        { icon: Wind, label: 'Wind', value: `${current.windSpeed} km/h`, color: 'text-fm-text-secondary' },
+                        { icon: Sun, label: 'UV Index', value: current.uvIndex, color: 'text-fm-stat-crops' },
+                        { icon: Gauge, label: 'Pressure', value: `${current.pressure} hPa`, color: 'text-fm-accent-hover' },
                     ].map((stat) => (
                         <motion.div
                             key={stat.label}
@@ -74,8 +74,8 @@ export default function WeatherWidget() {
                         >
                             <stat.icon className={`w-4 h-4 ${stat.color}`} />
                             <div>
-                                <p className="font-mono text-sm font-semibold text-farm-text">{stat.value}</p>
-                                <p className="text-[10px] text-farm-text-muted uppercase tracking-wider">{stat.label}</p>
+                                <p className="font-mono text-sm font-semibold text-fm-text-primary">{stat.value}</p>
+                                <p className="text-[10px] text-fm-text-muted uppercase tracking-wider">{stat.label}</p>
                             </div>
                         </motion.div>
                     ))}

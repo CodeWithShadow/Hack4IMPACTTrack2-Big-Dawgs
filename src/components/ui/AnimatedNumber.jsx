@@ -24,7 +24,7 @@ export default function AnimatedNumber({
             <p className={`font-mono font-bold tabular-nums ${className}`}>
                 {prefix}{typeof animatedValue === 'number' ? animatedValue.toLocaleString() : animatedValue}{suffix}
             </p>
-            {label && <p className={`text-sm text-farm-text-muted mt-1 font-dm ${labelClassName}`}>{label}</p>}
+            {label && <p className={`text-sm text-fm-text-muted mt-1 font-dm ${labelClassName}`}>{label}</p>}
         </motion.div>
     );
 }

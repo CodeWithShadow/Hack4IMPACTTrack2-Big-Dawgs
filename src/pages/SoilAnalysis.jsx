@@ -71,11 +71,11 @@ export default function SoilAnalysis() {
         <PageWrapper>
             <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-4xl mx-auto space-y-8">
                 <motion.div variants={staggerItem} className="space-y-1">
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">AI Analysis</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
-                        Soil<br /><span className="text-farm-warm">Analysis</span>
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">AI Analysis</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
+                        Soil<br /><span className="text-fm-stat-crops">Analysis</span>
                     </h1>
-                    <p className="text-farm-text-muted font-dm mt-2">Upload a soil sample photo for AI-powered classification and crop recommendations.</p>
+                    <p className="text-fm-text-muted font-dm mt-2">Upload a soil sample photo for AI-powered classification and crop recommendations.</p>
                 </motion.div>
 
                 <motion.div variants={staggerItem}>
@@ -89,7 +89,7 @@ export default function SoilAnalysis() {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleAnalyze}
                             disabled={loading}
-                            className="w-full py-4 bg-farm-warm text-farm-bg font-syne font-bold text-lg rounded-lg disabled:opacity-50"
+                            className="w-full py-4 bg-fm-stat-crops text-fm-text-primary font-syne font-bold text-lg rounded-lg disabled:opacity-50"
                         >
                             {loading ? <LoadingSpinner text={progressText || "Classifying soil..."} size="sm" /> : 'Analyze Soil'}
                         </motion.button>
@@ -101,19 +101,19 @@ export default function SoilAnalysis() {
                 {result && (
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                         {/* Soil Type */}
-                        <div className="border-l-4 border-farm-warm pl-6 py-2">
-                            <p className="text-xs uppercase tracking-widest text-farm-text-muted font-mono mb-1">Detected Soil Type</p>
-                            <TypewriterText text={result.soilType.name} speed={50} className="font-syne font-bold text-3xl md:text-5xl text-farm-warm" />
-                            <p className="text-farm-text-secondary text-sm mt-2 font-dm">{result.soilType.description}</p>
+                        <div className="border-l-4 border-fm-stat-crops pl-6 py-2">
+                            <p className="text-xs uppercase tracking-widest text-fm-text-muted font-mono mb-1">Detected Soil Type</p>
+                            <TypewriterText text={result.soilType.name} speed={50} className="font-syne font-bold text-3xl md:text-5xl text-fm-stat-crops" />
+                            <p className="text-fm-text-secondary text-sm mt-2 font-dm">{result.soilType.description}</p>
                             <div className="flex items-center gap-4 mt-3">
-                                <span className="font-mono text-sm text-farm-accent">pH: {result.phEstimate}</span>
-                                <span className="font-mono text-sm text-farm-text-muted">{Math.round(result.confidence * 100)}% confidence</span>
+                                <span className="font-mono text-sm text-fm-accent">pH: {result.phEstimate}</span>
+                                <span className="font-mono text-sm text-fm-text-muted">{Math.round(result.confidence * 100)}% confidence</span>
                             </div>
                         </div>
 
                         {/* Composition */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="bg-farm-card border-l-4 border-farm-warm p-6 rounded-r-lg">
-                            <h3 className="font-syne font-bold text-lg text-farm-text mb-4">Soil Composition</h3>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="bg-fm-bg-elevated border-l-4 border-fm-stat-crops p-6 rounded-r-lg">
+                            <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">Soil Composition</h3>
                             <div className="space-y-3">
                                 {Object.entries(result.composition).map(([key, value], i) => (
                                     <ConfidenceBar key={key} label={key.charAt(0).toUpperCase() + key.slice(1)} value={value / 100} color={key === 'organic' ? '#4ADE80' : key === 'clay' ? '#92400E' : key === 'silt' ? '#FCD34D' : '#86EFAC'} delay={i * 0.15} />
@@ -122,15 +122,15 @@ export default function SoilAnalysis() {
                         </motion.div>
 
                         {/* Nutrient Profile */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg">
-                            <h3 className="font-syne font-bold text-lg text-farm-text mb-4">Nutrient Profile</h3>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg">
+                            <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">Nutrient Profile</h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {Object.entries(result.nutrients).map(([key, val]) => {
-                                    const levelColors = { 'Very High': 'text-farm-accent', 'High': 'text-farm-accent', 'Medium': 'text-farm-warm', 'Low': 'text-farm-warning', 'Very Low': 'text-farm-danger' };
+                                    const levelColors = { 'Very High': 'text-fm-accent', 'High': 'text-fm-accent', 'Medium': 'text-fm-stat-crops', 'Low': 'text-fm-stat-crops', 'Very Low': 'text-fm-stat-disease' };
                                     return (
                                         <div key={key} className="text-center">
-                                            <p className="text-xs text-farm-text-muted uppercase tracking-wider font-mono">{key}</p>
-                                            <p className={`font-mono font-bold text-lg mt-1 ${levelColors[val] || 'text-farm-text'}`}>{val}</p>
+                                            <p className="text-xs text-fm-text-muted uppercase tracking-wider font-mono">{key}</p>
+                                            <p className={`font-mono font-bold text-lg mt-1 ${levelColors[val] || 'text-fm-text-primary'}`}>{val}</p>
                                         </div>
                                     );
                                 })}
@@ -140,7 +140,7 @@ export default function SoilAnalysis() {
                         {/* Recommended Crops */}
                         {recommendedCrops.length > 0 && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-                                <h3 className="font-syne font-bold text-lg text-farm-text mb-4">Recommended Crops</h3>
+                                <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">Recommended Crops</h3>
                                 <div className="flex gap-3 overflow-x-auto no-scrollbar scroll-snap-x pb-2">
                                     {recommendedCrops.map((crop, i) => (
                                         <motion.div
@@ -149,10 +149,10 @@ export default function SoilAnalysis() {
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.8 + i * 0.1 }}
                                             whileHover={{ y: -4 }}
-                                            className="flex-shrink-0 w-32 bg-farm-card border border-farm-border/50 p-4 rounded-lg text-center scroll-snap-align-start"
+                                            className="flex-shrink-0 w-32 bg-fm-bg-elevated border border-farm-border/50 p-4 rounded-lg text-center scroll-snap-align-start"
                                         >
                                             <span className="text-2xl">🌱</span>
-                                            <p className="text-sm font-medium text-farm-text mt-2 font-dm">{crop}</p>
+                                            <p className="text-sm font-medium text-fm-text-primary mt-2 font-dm">{crop}</p>
                                         </motion.div>
                                     ))}
                                 </div>
@@ -161,9 +161,9 @@ export default function SoilAnalysis() {
 
                         {/* AI Recommendations */}
                         {aiText && (
-                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }} className="bg-farm-card border-l-4 border-farm-accent-secondary p-6 rounded-r-lg">
-                                <h3 className="font-syne font-bold text-lg text-farm-text mb-4">🤖 AI Recommendations</h3>
-                                <TypewriterText text={aiText} speed={10} className="text-sm text-farm-text-secondary leading-relaxed font-dm" />
+                            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }} className="bg-fm-bg-elevated border-l-4 border-fm-accent-hover p-6 rounded-r-lg">
+                                <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">🤖 AI Recommendations</h3>
+                                <TypewriterText text={aiText} speed={10} className="text-sm text-fm-text-secondary leading-relaxed font-dm" />
                             </motion.div>
                         )}
                     </motion.div>

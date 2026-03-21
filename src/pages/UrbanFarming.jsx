@@ -40,8 +40,8 @@ export default function UrbanFarming() {
         }
     };
 
-    const inputClass = "w-full px-4 py-3 bg-farm-card border border-farm-border rounded-lg text-farm-text font-dm text-sm input-animated";
-    const labelClass = "text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
+    const inputClass = "w-full px-4 py-3 bg-fm-bg-elevated border border-fm-border rounded-lg text-fm-text-primary font-dm text-sm input-animated";
+    const labelClass = "text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
 
     // Parse crop cards from AI text (simplified extraction)
     const sampleCrops = [
@@ -56,11 +56,11 @@ export default function UrbanFarming() {
         <PageWrapper>
             <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-4xl mx-auto space-y-8">
                 <motion.div variants={staggerItem}>
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">Growing Guide</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
-                        Urban<br /><span className="text-farm-accent">Farming</span>
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">Growing Guide</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
+                        Urban<br /><span className="text-fm-accent">Farming</span>
                     </h1>
-                    <p className="text-farm-text-muted font-dm mt-2">Get personalized crop recommendations for your urban space.</p>
+                    <p className="text-fm-text-muted font-dm mt-2">Get personalized crop recommendations for your urban space.</p>
                 </motion.div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -89,7 +89,7 @@ export default function UrbanFarming() {
 
                     <motion.div variants={staggerItem}>
                         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading}
-                            className="w-full py-4 bg-farm-accent text-farm-bg font-syne font-bold text-lg rounded-lg disabled:opacity-50">
+                            className="w-full py-4 bg-fm-accent text-fm-bg-base font-syne font-bold text-lg rounded-lg disabled:opacity-50">
                             {loading ? 'Analyzing...' : 'Get Recommendations'}
                         </motion.button>
                     </motion.div>
@@ -101,7 +101,7 @@ export default function UrbanFarming() {
                     <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                         {/* Quick Crop Cards */}
                         <div>
-                            <h3 className="font-syne font-bold text-lg text-farm-text mb-4">Recommended Crops</h3>
+                            <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">Recommended Crops</h3>
                             <div className="flex gap-3 overflow-x-auto no-scrollbar scroll-snap-x pb-2">
                                 {sampleCrops.map((crop, i) => (
                                     <motion.div
@@ -110,20 +110,20 @@ export default function UrbanFarming() {
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ y: -4 }}
-                                        className="flex-shrink-0 w-40 bg-farm-card border border-farm-border/50 p-4 rounded-lg"
+                                        className="flex-shrink-0 w-40 bg-fm-bg-elevated border border-farm-border/50 p-4 rounded-lg"
                                     >
                                         <span className="text-3xl">{crop.icon}</span>
-                                        <h4 className="font-syne font-bold text-farm-text mt-2">{crop.name}</h4>
+                                        <h4 className="font-syne font-bold text-fm-text-primary mt-2">{crop.name}</h4>
                                         <div className="mt-2 space-y-1">
-                                            <div className="flex items-center gap-1.5 text-xs text-farm-text-muted">
+                                            <div className="flex items-center gap-1.5 text-xs text-fm-text-muted">
                                                 <Sprout className="w-3 h-3" />
                                                 <span>{crop.difficulty}</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-farm-text-muted">
+                                            <div className="flex items-center gap-1.5 text-xs text-fm-text-muted">
                                                 <Sun className="w-3 h-3" />
                                                 <span>{crop.days} days</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-xs text-farm-text-muted">
+                                            <div className="flex items-center gap-1.5 text-xs text-fm-text-muted">
                                                 <Droplets className="w-3 h-3" />
                                                 <span>{crop.water}</span>
                                             </div>
@@ -135,9 +135,9 @@ export default function UrbanFarming() {
 
                         {/* AI Full Recommendation */}
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                            className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg">
-                            <h3 className="font-syne font-bold text-lg text-farm-text mb-4">🌱 Complete Growing Guide</h3>
-                            <TypewriterText text={result} speed={8} className="text-sm text-farm-text-secondary leading-relaxed font-dm" />
+                            className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg">
+                            <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">🌱 Complete Growing Guide</h3>
+                            <TypewriterText text={result} speed={8} className="text-sm text-fm-text-secondary leading-relaxed font-dm" />
                         </motion.div>
                     </motion.div>
                 )}

@@ -84,12 +84,12 @@ export default function DiseaseDetection() {
             >
                 {/* Header */}
                 <motion.div variants={staggerItem} className="space-y-1">
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">AI Analysis</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">AI Analysis</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
                         Crop Disease<br />
-                        <span className="text-farm-accent">Detection</span>
+                        <span className="text-fm-accent">Detection</span>
                     </h1>
-                    <p className="text-farm-text-muted font-dm mt-2 max-w-xl">
+                    <p className="text-fm-text-muted font-dm mt-2 max-w-xl">
                         Upload or capture a photo of your crop leaf. Our AI model runs entirely in your browser — no internet needed after the first load.
                     </p>
                 </motion.div>
@@ -107,7 +107,7 @@ export default function DiseaseDetection() {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleAnalyze}
                             disabled={diseaseLoading}
-                            className="w-full py-4 bg-farm-accent text-farm-bg font-syne font-bold text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
+                            className="w-full py-4 bg-fm-accent text-fm-bg-base font-syne font-bold text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
                         >
                             {diseaseLoading ? (
                                 <LoadingSpinner text={progressText || 'Analyzing leaf patterns...'} size="sm" />

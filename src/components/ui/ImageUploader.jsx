@@ -57,14 +57,14 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                        className="relative rounded-lg overflow-hidden border border-farm-border"
+                        className="relative rounded-lg overflow-hidden border border-fm-border"
                     >
-                        <img src={preview} alt="Preview" className="w-full max-h-[400px] object-contain bg-farm-bg" />
+                        <img src={preview} alt="Preview" className="w-full max-h-[400px] object-contain bg-fm-bg-base" />
                         <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={clearPreview}
-                            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-farm-bg/80 backdrop-blur flex items-center justify-center text-farm-text hover:bg-farm-danger/80 transition-colors"
+                            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-farm-bg/80 backdrop-blur flex items-center justify-center text-fm-text-primary hover:bg-farm-danger/80 transition-colors"
                         >
                             <X className="w-4 h-4" />
                         </motion.button>
@@ -75,18 +75,18 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="relative rounded-lg overflow-hidden border border-farm-border"
+                        className="relative rounded-lg overflow-hidden border border-fm-border"
                     >
-                        <video ref={videoRef} autoPlay playsInline className="w-full max-h-[400px] object-cover" />
+                        <video ref={videoRef} autoPlay playsInline className="w-full max-h-[60vh] bg-black rounded-lg object-contain" />
                         <canvas ref={canvasRef} className="hidden" />
                         <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
                             <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={handleCameraCapture}
-                                className="w-16 h-16 rounded-full bg-farm-accent flex items-center justify-center shadow-lg shadow-farm-accent/30"
+                                className="w-16 h-16 rounded-full bg-fm-accent flex items-center justify-center shadow-lg shadow-farm-accent/30"
                             >
-                                <Camera className="w-7 h-7 text-farm-bg" />
+                                <Camera className="w-7 h-7 text-fm-text-primary" />
                             </motion.button>
                             <motion.button
                                 whileHover={{ scale: 1.1 }}
@@ -94,7 +94,7 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                                 onClick={clearPreview}
                                 className="w-12 h-12 rounded-full bg-farm-bg/80 backdrop-blur flex items-center justify-center"
                             >
-                                <X className="w-5 h-5 text-farm-text" />
+                                <X className="w-5 h-5 text-fm-text-primary" />
                             </motion.button>
                         </div>
                     </motion.div>
@@ -108,8 +108,8 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                         <div
                             {...getRootProps()}
                             className={`relative cursor-pointer border-2 border-dashed rounded-lg p-12 text-center transition-all ${isDragActive
-                                    ? 'border-farm-accent bg-farm-accent/5'
-                                    : 'border-farm-border hover:border-farm-accent/50 animate-pulse-border'
+                                    ? 'border-fm-accent bg-farm-accent/5'
+                                    : 'border-fm-border hover:border-farm-accent/50 animate-pulse-border'
                                 }`}
                         >
                             <input {...getInputProps()} />
@@ -118,13 +118,13 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                                 className="flex flex-col items-center gap-4"
                             >
                                 <div className="w-16 h-16 rounded-2xl bg-farm-accent/10 flex items-center justify-center">
-                                    <Upload className="w-8 h-8 text-farm-accent" />
+                                    <Upload className="w-8 h-8 text-fm-accent" />
                                 </div>
                                 <div>
-                                    <p className="text-farm-text font-medium font-dm">
+                                    <p className="text-fm-text-primary font-medium font-dm">
                                         {isDragActive ? 'Drop your image here' : 'Drag & drop or click to upload'}
                                     </p>
-                                    <p className="text-sm text-farm-text-muted mt-1">Supports JPG, PNG, WebP</p>
+                                    <p className="text-sm text-fm-text-muted mt-1">Supports JPG, PNG, WebP</p>
                                 </div>
                             </motion.div>
                         </div>
@@ -134,7 +134,7 @@ export default function ImageUploader({ onImageSelect, accept = 'image/*' }) {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleOpenCamera}
-                            className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-3 rounded-lg border border-farm-border hover:border-farm-accent/50 text-farm-text-secondary hover:text-farm-accent transition-all"
+                            className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-3 rounded-lg border border-fm-border hover:border-farm-accent/50 text-fm-text-secondary hover:text-fm-accent transition-all"
                         >
                             <Camera className="w-5 h-5" />
                             <span className="font-dm text-sm">Open Camera</span>

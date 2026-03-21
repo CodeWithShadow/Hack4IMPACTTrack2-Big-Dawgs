@@ -7,10 +7,10 @@ export default function ConfidenceBar({ label, value, color = '#4ADE80', delay =
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-                <span className="text-sm text-farm-text-secondary font-dm truncate pr-4">{label}</span>
-                <span className="text-sm font-mono font-semibold text-farm-text tabular-nums">{percentage}%</span>
+                <span className="text-sm text-fm-text-secondary font-dm truncate pr-4">{label}</span>
+                <span className="text-sm font-mono font-semibold text-fm-text-primary tabular-nums">{percentage}%</span>
             </div>
-            <div className="h-2 bg-farm-bg rounded-full overflow-hidden">
+            <div className="h-2 bg-fm-bg-base rounded-full overflow-hidden">
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${percentage}%` }}
