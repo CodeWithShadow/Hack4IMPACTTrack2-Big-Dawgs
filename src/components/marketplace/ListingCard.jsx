@@ -2,17 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Tag, User, Sparkles } from 'lucide-react';
 
-export default function ListingCard({ listing, index = 0 }) {
+export default function ListingCard({ listing, index = 0, onBuyClick, isOwner }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.06 }}
             whileHover={{ y: -4, boxShadow: '0 0 30px rgba(74, 222, 128, 0.1)' }}
-            className="bg-farm-card border border-farm-border/50 rounded-lg overflow-hidden group cursor-pointer"
+            className="bg-fm-bg-elevated border border-farm-border/50 rounded-lg overflow-hidden group cursor-pointer flex flex-col h-full"
         >
             {/* Image */}
-            <div className="relative h-40 bg-farm-bg overflow-hidden">
+            <div className="relative h-40 bg-fm-bg-base flex-shrink-0 overflow-hidden">
                 {listing.image_url ? (
                     <img
                         src={listing.image_url}
@@ -25,7 +25,7 @@ export default function ListingCard({ listing, index = 0 }) {
                     </div>
                 )}
                 {listing.is_surplus && (
-                    <span className="absolute top-2 left-2 px-2 py-0.5 text-[10px] uppercase tracking-wider bg-farm-warm/90 text-farm-bg rounded font-bold">
+                    <span className="absolute top-2 left-2 px-2 py-0.5 text-[10px] uppercase tracking-wider bg-farm-warm/90 text-fm-text-primary rounded font-bold">
                         Surplus
                     </span>
                 )}
@@ -33,7 +33,7 @@ export default function ListingCard({ listing, index = 0 }) {
                     <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 text-[10px] bg-farm-accent/90 text-farm-bg rounded font-mono"
+                        className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 text-[10px] bg-farm-accent/90 text-fm-text-primary rounded font-mono"
                     >
                         <Sparkles className="w-3 h-3" />
                         AI Price
@@ -41,21 +41,21 @@ export default function ListingCard({ listing, index = 0 }) {
                 )}
             </div>
 
-            {/* Content */}
-            <div className="p-4 space-y-3">
+            {/* Content gap buffer */}
+            <div className="p-4 space-y-3 flex-1 flex flex-col">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h3 className="font-syne font-bold text-farm-text">{listing.crop_name || 'Crop'}</h3>
-                        <p className="text-xs text-farm-text-muted font-dm mt-0.5">
+                        <h3 className="font-syne font-bold text-fm-text-primary">{listing.crop_name || 'Crop'}</h3>
+                        <p className="text-xs text-fm-text-muted font-dm mt-0.5">
                             {listing.quantity} {listing.unit || 'kg'}
                         </p>
                     </div>
-                    <p className="font-mono text-xl font-bold text-farm-accent">
+                    <p className="font-mono text-xl font-bold text-fm-accent">
                         ₹{listing.price?.toLocaleString() || '0'}
                     </p>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-farm-text-muted">
+                <div className="flex items-center justify-between text-xs text-fm-text-muted mt-auto mb-1">
                     <div className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
                         <span>{listing.location || 'India'}</span>
@@ -69,11 +69,28 @@ export default function ListingCard({ listing, index = 0 }) {
                 {listing.ai_price && (
                     <div className="pt-2 border-t border-farm-border/50">
                         <div className="flex items-center justify-between text-xs">
-                            <span className="text-farm-text-muted">AI Suggested Price</span>
-                            <span className="font-mono font-semibold text-farm-accent">₹{listing.ai_price?.toLocaleString()}</span>
+                            <span className="text-fm-text-muted">AI Suggested Price</span>
+                            <span className="font-mono font-semibold text-fm-accent">₹{listing.ai_price?.toLocaleString()}</span>
                         </div>
                     </div>
                 )}
+
+                <div className="pt-3 mt-2 border-t border-farm-border/50">
+                    <button 
+                        disabled={isOwner}
+                        onClick={(e) => { 
+                            e.stopPropagation(); 
+                            if (!isOwner && onBuyClick) onBuyClick(listing); 
+                        }}
+                        className={`w-full py-2 rounded-lg font-syne font-bold text-sm transition-colors ${
+                            isOwner 
+                                ? 'bg-fm-bg-base border border-fm-border text-fm-text-muted cursor-not-allowed' 
+                                : 'bg-farm-accent/10 text-fm-accent hover:bg-fm-accent hover:text-fm-bg-base'
+                        }`}
+                    >
+                        {isOwner ? 'Your Listing' : 'Buy Now'}
+                    </button>
+                </div>
             </div>
         </motion.div>
     );

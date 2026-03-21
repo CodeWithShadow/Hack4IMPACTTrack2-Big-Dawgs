@@ -47,7 +47,7 @@ export default function LoadingSpinner({ text = 'Loading...', size = 'md' }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="text-sm text-farm-text-muted font-dm"
+                className="text-sm text-fm-text-muted font-dm"
             >
                 {text}
             </motion.p>

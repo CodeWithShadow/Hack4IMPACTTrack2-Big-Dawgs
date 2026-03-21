@@ -10,7 +10,7 @@ export function useCamera() {
     const startCamera = useCallback(async (facingMode = 'environment') => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                video: { facingMode }
             });
             setStream(mediaStream);
             if (videoRef.current) {

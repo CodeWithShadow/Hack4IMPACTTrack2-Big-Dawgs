@@ -69,8 +69,8 @@ export default function Irrigation() {
         }
     };
 
-    const inputClass = "w-full px-4 py-3 bg-farm-card border border-farm-border rounded-lg text-farm-text font-dm text-sm input-animated focus:border-farm-accent";
-    const labelClass = "text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
+    const inputClass = "w-full px-4 py-3 bg-fm-bg-elevated border border-fm-border rounded-lg text-fm-text-primary font-dm text-sm input-animated focus:border-fm-accent";
+    const labelClass = "text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
 
     const circumference = 2 * Math.PI * 45;
     const efficiencyOffset = circumference - ((waterEfficiency || 0) / 100) * circumference;
@@ -79,8 +79,8 @@ export default function Irrigation() {
         <PageWrapper>
             <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-4xl mx-auto space-y-8">
                 <motion.div variants={staggerItem} className="space-y-1">
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">Smart Planning</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">Smart Planning</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
                         Smart<br /><span className="text-blue-400">Irrigation</span>
                     </h1>
                 </motion.div>
@@ -124,14 +124,14 @@ export default function Irrigation() {
                 {irrigateToday !== null && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            className={`p-6 rounded-lg border-l-4 ${irrigateToday ? 'border-blue-400 bg-blue-500/5' : 'border-farm-accent bg-farm-accent/5'}`}>
-                            <Droplets className={`w-8 h-8 mb-3 ${irrigateToday ? 'text-blue-400' : 'text-farm-accent'}`} />
-                            <p className="font-syne font-bold text-2xl text-farm-text">{irrigateToday ? 'Yes' : 'No'}</p>
-                            <p className="text-xs text-farm-text-muted font-mono uppercase tracking-wider mt-1">Irrigate Today</p>
+                            className={`p-6 rounded-lg border-l-4 ${irrigateToday ? 'border-blue-400 bg-blue-500/5' : 'border-fm-accent bg-farm-accent/5'}`}>
+                            <Droplets className={`w-8 h-8 mb-3 ${irrigateToday ? 'text-blue-400' : 'text-fm-accent'}`} />
+                            <p className="font-syne font-bold text-2xl text-fm-text-primary">{irrigateToday ? 'Yes' : 'No'}</p>
+                            <p className="text-xs text-fm-text-muted font-mono uppercase tracking-wider mt-1">Irrigate Today</p>
                         </motion.div>
 
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                            className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg flex flex-col items-center">
+                            className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg flex flex-col items-center">
                             <div className="relative w-24 h-24">
                                 <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" r="45" fill="none" stroke="#1A3A25" strokeWidth="6" />
@@ -140,25 +140,25 @@ export default function Irrigation() {
                                         transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.3 }} />
                                 </svg>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="font-mono text-2xl font-bold text-farm-text">{waterEfficiency}%</span>
+                                    <span className="font-mono text-2xl font-bold text-fm-text-primary">{waterEfficiency}%</span>
                                 </div>
                             </div>
-                            <p className="text-xs text-farm-text-muted font-mono uppercase tracking-wider mt-2">Water Efficiency</p>
+                            <p className="text-xs text-fm-text-muted font-mono uppercase tracking-wider mt-2">Water Efficiency</p>
                         </motion.div>
 
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                            className="bg-farm-card border-l-4 border-farm-warm p-6 rounded-r-lg">
-                            <TrendingDown className="w-8 h-8 text-farm-warm mb-3" />
-                            <AnimatedNumber value={Math.round((waterEfficiency || 70) * 15)} className="text-3xl text-farm-text" suffix=" L" />
-                            <p className="text-xs text-farm-text-muted font-mono uppercase tracking-wider mt-1">Est. Water Savings</p>
+                            className="bg-fm-bg-elevated border-l-4 border-fm-stat-crops p-6 rounded-r-lg">
+                            <TrendingDown className="w-8 h-8 text-fm-stat-crops mb-3" />
+                            <AnimatedNumber value={Math.round((waterEfficiency || 70) * 15)} className="text-3xl text-fm-text-primary" suffix=" L" />
+                            <p className="text-xs text-fm-text-muted font-mono uppercase tracking-wider mt-1">Est. Water Savings</p>
                         </motion.div>
                     </div>
                 )}
 
                 {result && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-farm-card border-l-4 border-blue-400 p-6 rounded-r-lg">
-                        <h3 className="font-syne font-bold text-lg text-farm-text mb-4">💧 AI Irrigation Schedule</h3>
-                        <TypewriterText text={result} speed={10} className="text-sm text-farm-text-secondary leading-relaxed font-dm" />
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-fm-bg-elevated border-l-4 border-blue-400 p-6 rounded-r-lg">
+                        <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">💧 AI Irrigation Schedule</h3>
+                        <TypewriterText text={result} speed={10} className="text-sm text-fm-text-secondary leading-relaxed font-dm" />
                     </motion.div>
                 )}
             </motion.div>

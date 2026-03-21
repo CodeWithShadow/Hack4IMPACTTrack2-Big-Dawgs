@@ -18,7 +18,7 @@ const quickActions = [
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const { user, stats, setStats, recentAnalyses, setRecentAnalyses, diseaseAlerts, setDiseaseAlerts } = useStore();
+    const { user, stats, setStats, recentAnalyses, setRecentAnalyses, diseaseAlerts, setDiseaseAlerts, weather, addNotification } = useStore();
     const [loading, setLoading] = useState(true);
 
     const greeting = () => {
@@ -42,10 +42,38 @@ export default function Dashboard() {
                 setStats(s);
                 setRecentAnalyses(r);
                 setDiseaseAlerts(a);
+
+                // Dispatch Notification for Disease Alerts
+                if (a && a.length > 0) {
+                    addNotification({
+                        id: `disease_alert_${a.length}`,
+                        type: 'warning',
+                        title: 'Disease Alerts Nearby',
+                        message: `${a.length} crop disease${a.length > 1 ? 's' : ''} reported in your area. Check the alerts map.`
+                    });
+                }
             } catch (err) { console.error(err); }
             setLoading(false);
         })();
-    }, [user]);
+    }, [user, addNotification, setStats, setRecentAnalyses, setDiseaseAlerts]);
+
+    // Dispatch Notification for Severe Weather
+    useEffect(() => {
+        if (weather?.current) {
+            const temp = weather.current.temp || 0;
+            const condition = (weather.current.description || '').toLowerCase();
+            const isSevere = condition.includes('rain') || condition.includes('storm') || condition.includes('extreme') || condition.includes('snow') || temp > 40 || temp < 5;
+            
+            if (isSevere) {
+                addNotification({
+                    id: `weather_alert_${new Date().toDateString()}`,
+                    type: 'weather',
+                    title: 'Weather Advisory',
+                    message: `${weather.current.description || 'Severe weather'} (${temp}°C) expected. Please protect your crops if necessary.`
+                });
+            }
+        }
+    }, [weather, addNotification]);
 
     const performanceScore = Math.min(
         Math.round(((stats.totalAnalyses * 5) + (stats.cropsMonitored * 10) + (stats.waterSaved / 100)) / 3),
@@ -65,10 +93,10 @@ export default function Dashboard() {
             >
                 {/* Hero Greeting */}
                 <motion.div variants={staggerItem} className="space-y-1">
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">Dashboard</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-6xl text-farm-text leading-tight">
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">Dashboard</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-6xl text-fm-text-primary leading-tight">
                         {greeting()},<br />
-                        <span className="text-farm-accent">{firstName}</span>
+                        <span className="text-fm-accent">{firstName}</span>
                     </h1>
                 </motion.div>
 
@@ -86,7 +114,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Quick Actions */}
                     <motion.div variants={staggerItem} className="lg:col-span-2">
-                        <h2 className="font-syne font-bold text-xl text-farm-text mb-4">Quick Actions</h2>
+                        <h2 className="font-syne font-bold text-xl text-fm-text-primary mb-4">Quick Actions</h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             {quickActions.map((action, i) => {
                                 const Icon = action.icon;
@@ -99,7 +127,7 @@ export default function Dashboard() {
                                         whileHover={{ y: -4, boxShadow: `0 0 30px ${action.color}22` }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => navigate(action.path)}
-                                        className="p-4 bg-farm-card border border-farm-border/50 rounded-lg flex flex-col items-center gap-3 group"
+                                        className="p-4 bg-fm-bg-elevated border border-farm-border/50 rounded-lg flex flex-col items-center gap-3 group"
                                     >
                                         <div
                                             className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
@@ -107,7 +135,7 @@ export default function Dashboard() {
                                         >
                                             <Icon className="w-6 h-6" style={{ color: action.color }} />
                                         </div>
-                                        <span className="text-sm font-medium text-farm-text-secondary group-hover:text-farm-text transition-colors">
+                                        <span className="text-sm font-medium text-fm-text-secondary group-hover:text-fm-text-primary transition-colors">
                                             {action.label}
                                         </span>
                                     </motion.button>
@@ -119,9 +147,9 @@ export default function Dashboard() {
                     {/* Performance Ring */}
                     <motion.div
                         variants={staggerItem}
-                        className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg flex flex-col items-center justify-center"
+                        className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg flex flex-col items-center justify-center"
                     >
-                        <p className="text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-4">Performance Score</p>
+                        <p className="text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-4">Performance Score</p>
                         <div className="relative w-28 h-28">
                             <svg className="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
                                 <circle cx="50" cy="50" r="45" fill="none" stroke="#1A3A25" strokeWidth="6" />
@@ -138,8 +166,8 @@ export default function Dashboard() {
                                 />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="font-mono text-3xl font-bold text-farm-text">{performanceScore}</span>
-                                <span className="text-[10px] text-farm-text-muted">/ 100</span>
+                                <span className="font-mono text-3xl font-bold text-fm-text-primary">{performanceScore}</span>
+                                <span className="text-[10px] text-fm-text-muted">/ 100</span>
                             </div>
                         </div>
                     </motion.div>
@@ -151,21 +179,21 @@ export default function Dashboard() {
                         variants={staggerItem}
                         whileHover={{ x: 4 }}
                         onClick={() => navigate('/alerts')}
-                        className="bg-farm-warning/5 border-l-4 border-farm-warning p-4 rounded-r-lg flex items-center gap-4 cursor-pointer"
+                        className="bg-farm-warning/5 border-l-4 border-fm-stat-crops p-4 rounded-r-lg flex items-center gap-4 cursor-pointer"
                     >
-                        <AlertTriangle className="w-6 h-6 text-farm-warning flex-shrink-0" />
+                        <AlertTriangle className="w-6 h-6 text-fm-stat-crops flex-shrink-0" />
                         <div>
-                            <p className="text-sm font-medium text-farm-text">
+                            <p className="text-sm font-medium text-fm-text-primary">
                                 {diseaseAlerts.length} disease alert{diseaseAlerts.length > 1 ? 's' : ''} reported nearby
                             </p>
-                            <p className="text-xs text-farm-text-muted">Click to view the disease alerts map</p>
+                            <p className="text-xs text-fm-text-muted">Click to view the disease alerts map</p>
                         </div>
                     </motion.div>
                 )}
 
                 {/* Recent Analyses */}
                 <motion.div variants={staggerItem}>
-                    <h2 className="font-syne font-bold text-xl text-farm-text mb-4">Recent Analyses</h2>
+                    <h2 className="font-syne font-bold text-xl text-fm-text-primary mb-4">Recent Analyses</h2>
                     <RecentAnalyses analyses={recentAnalyses} />
                 </motion.div>
             </motion.div>

@@ -57,16 +57,16 @@ export default function Profile() {
                         {user?.user_metadata?.avatar_url ? (
                             <img src={user.user_metadata.avatar_url} alt="" className="w-full h-full object-cover" />
                         ) : (
-                            <div className="w-full h-full bg-farm-accent/20 flex items-center justify-center text-farm-accent text-3xl font-bold">
+                            <div className="w-full h-full bg-farm-accent/20 flex items-center justify-center text-fm-accent text-3xl font-bold">
                                 {user?.user_metadata?.full_name?.[0] || 'F'}
                             </div>
                         )}
                     </motion.div>
                     <div className="text-center md:text-left">
-                        <h1 className="font-syne font-extrabold text-3xl md:text-4xl text-farm-text">
+                        <h1 className="font-syne font-extrabold text-3xl md:text-4xl text-fm-text-primary">
                             {user?.user_metadata?.full_name || 'Farmer'}
                         </h1>
-                        <p className="text-farm-text-muted font-dm">{user?.email}</p>
+                        <p className="text-fm-text-muted font-dm">{user?.email}</p>
                     </div>
                 </motion.div>
 
@@ -81,7 +81,7 @@ export default function Profile() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="bg-farm-card border-l-4 p-5 rounded-r-lg flex flex-col items-center"
+                                className="bg-fm-bg-elevated border-l-4 p-5 rounded-r-lg flex flex-col items-center"
                                 style={{ borderLeftColor: stat.color }}
                             >
                                 <div className="relative w-20 h-20 mb-3">
@@ -95,16 +95,16 @@ export default function Profile() {
                                         <Icon className="w-5 h-5" style={{ color: stat.color }} />
                                     </div>
                                 </div>
-                                <AnimatedNumber value={stat.value} className="text-2xl text-farm-text" duration={1500} />
-                                <p className="text-[10px] text-farm-text-muted uppercase tracking-wider font-mono mt-1 text-center">{stat.label}</p>
+                                <AnimatedNumber value={stat.value} className="text-2xl text-fm-text-primary" duration={1500} />
+                                <p className="text-[10px] text-fm-text-muted uppercase tracking-wider font-mono mt-1 text-center">{stat.label}</p>
                             </motion.div>
                         );
                     })}
                 </motion.div>
 
                 {/* Performance Score */}
-                <motion.div variants={staggerItem} className="bg-farm-card border-l-4 border-farm-accent p-6 rounded-r-lg">
-                    <h3 className="font-syne font-bold text-lg text-farm-text mb-4">Farmer Performance Score</h3>
+                <motion.div variants={staggerItem} className="bg-fm-bg-elevated border-l-4 border-fm-accent p-6 rounded-r-lg">
+                    <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">Farmer Performance Score</h3>
                     <div className="flex items-center gap-6">
                         <div className="relative w-28 h-28">
                             <svg className="w-28 h-28 -rotate-90" viewBox="0 0 100 100">
@@ -115,13 +115,13 @@ export default function Profile() {
                                     transition={{ duration: 2, delay: 0.5 }} />
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="font-mono text-3xl font-bold text-farm-text">{performanceScore}</span>
+                                <span className="font-mono text-3xl font-bold text-fm-text-primary">{performanceScore}</span>
                             </div>
                         </div>
-                        <div className="space-y-2 text-sm text-farm-text-secondary font-dm">
+                        <div className="space-y-2 text-sm text-fm-text-secondary font-dm">
                             <p>Based on your analysis frequency, crop monitoring, and water conservation efforts.</p>
                             <div className="flex items-center gap-2 mt-2">
-                                <div className={`w-3 h-3 rounded-full ${performanceScore > 70 ? 'bg-farm-accent' : performanceScore > 40 ? 'bg-farm-warning' : 'bg-farm-danger'}`} />
+                                <div className={`w-3 h-3 rounded-full ${performanceScore > 70 ? 'bg-fm-accent' : performanceScore > 40 ? 'bg-fm-stat-crops' : 'bg-fm-stat-disease'}`} />
                                 <span className="font-mono text-xs">
                                     {performanceScore > 70 ? 'Excellent' : performanceScore > 40 ? 'Good' : 'Needs Improvement'} — Microcredit {performanceScore > 60 ? 'Ready' : 'Not Ready'}
                                 </span>
@@ -132,17 +132,17 @@ export default function Profile() {
 
                 {/* Analysis History */}
                 <motion.div variants={staggerItem}>
-                    <h2 className="font-syne font-bold text-xl text-farm-text mb-4">Analysis History</h2>
+                    <h2 className="font-syne font-bold text-xl text-fm-text-primary mb-4">Analysis History</h2>
                     <RecentAnalyses analyses={recentAnalyses} />
                 </motion.div>
 
                 {/* Language Preference */}
-                <motion.div variants={staggerItem} className="bg-farm-card border-l-4 border-farm-border p-4 rounded-r-lg flex items-center justify-between">
+                <motion.div variants={staggerItem} className="bg-fm-bg-elevated border-l-4 border-fm-border p-4 rounded-r-lg flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <Globe className="w-5 h-5 text-farm-text-muted" />
-                        <span className="text-sm text-farm-text font-dm">Language Preference</span>
+                        <Globe className="w-5 h-5 text-fm-text-muted" />
+                        <span className="text-sm text-fm-text-primary font-dm">Language Preference</span>
                     </div>
-                    <select className="px-3 py-1.5 bg-farm-bg border border-farm-border rounded text-sm text-farm-text">
+                    <select className="px-3 py-1.5 bg-fm-bg-base border border-fm-border rounded text-sm text-fm-text-primary">
                         <option>English</option><option>हिंदी</option><option>मराठी</option><option>తెలుగు</option><option>தமிழ்</option>
                     </select>
                 </motion.div>
@@ -150,7 +150,7 @@ export default function Profile() {
                 {/* Logout */}
                 <motion.div variants={staggerItem}>
                     <motion.button whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }} onClick={handleLogout}
-                        className="flex items-center gap-3 px-6 py-3 text-farm-danger hover:bg-farm-danger/10 rounded-lg transition-colors w-full">
+                        className="flex items-center gap-3 px-6 py-3 text-fm-stat-disease hover:bg-farm-danger/10 rounded-lg transition-colors w-full">
                         <LogOut className="w-5 h-5" />
                         <span className="font-dm font-medium">Sign Out</span>
                     </motion.button>

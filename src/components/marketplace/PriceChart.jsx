@@ -21,9 +21,9 @@ export default function PriceChart({ data, label = 'Price Trend' }) {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-farm-card border-l-4 border-farm-accent p-4 rounded-r-lg"
+            className="bg-fm-bg-elevated border-l-4 border-fm-accent p-4 rounded-r-lg"
         >
-            <p className="text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-3">{label}</p>
+            <p className="text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-3">{label}</p>
 
             <svg viewBox="0 0 100 100" className="w-full h-32" preserveAspectRatio="none">
                 {/* Area fill */}
@@ -71,7 +71,7 @@ export default function PriceChart({ data, label = 'Price Trend' }) {
                 </defs>
             </svg>
 
-            <div className="flex justify-between mt-2 text-[10px] text-farm-text-muted font-mono">
+            <div className="flex justify-between mt-2 text-[10px] text-fm-text-muted font-mono">
                 {data.filter((_, i) => i === 0 || i === data.length - 1).map((d, i) => (
                     <span key={i}>{d.label}</span>
                 ))}

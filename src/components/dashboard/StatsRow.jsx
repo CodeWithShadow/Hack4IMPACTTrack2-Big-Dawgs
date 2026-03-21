@@ -26,7 +26,7 @@ export default function StatsRow({ stats }) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1, type: 'spring', stiffness: 300, damping: 24 }}
                         whileHover={{ y: -4, boxShadow: `0 0 30px ${colors[i]}22` }}
-                        className="bg-farm-card border-l-4 p-5 rounded-r-lg relative overflow-hidden group cursor-default"
+                        className="bg-fm-bg-elevated border-l-4 p-5 rounded-r-lg relative overflow-hidden group cursor-default"
                         style={{ borderLeftColor: colors[i] }}
                     >
                         <div className="absolute top-3 right-3 opacity-10 group-hover:opacity-20 transition-opacity">
@@ -34,7 +34,7 @@ export default function StatsRow({ stats }) {
                         </div>
                         <AnimatedNumber
                             value={value}
-                            className="text-3xl md:text-4xl text-farm-text"
+                            className="text-3xl md:text-4xl text-fm-text-primary"
                             label={labels[i]}
                             suffix={i === 3 ? '' : ''}
                         />

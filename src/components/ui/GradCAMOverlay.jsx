@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 
 export default function GradCAMOverlay({ originalSrc, heatmapSrc }) {
     return (
-        <div className="relative rounded-lg overflow-hidden border border-farm-border">
-            <img src={originalSrc} alt="Original" className="w-full max-h-[400px] object-contain bg-farm-bg" />
+        <div className="relative rounded-lg overflow-hidden border border-fm-border">
+            <img src={originalSrc} alt="Original" className="w-full max-h-[400px] object-contain bg-fm-bg-base" />
             {heatmapSrc && (
                 <motion.img
                     src={heatmapSrc}
@@ -20,7 +20,7 @@ export default function GradCAMOverlay({ originalSrc, heatmapSrc }) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
-                    className="absolute bottom-3 left-3 px-3 py-1.5 rounded-full bg-farm-bg/80 backdrop-blur text-xs font-mono text-farm-warm flex items-center gap-2"
+                    className="absolute bottom-3 left-3 px-3 py-1.5 rounded-full bg-farm-bg/80 backdrop-blur text-xs font-mono text-fm-stat-crops flex items-center gap-2"
                 >
                     <div className="w-3 h-2 rounded-sm" style={{ background: 'linear-gradient(to right, #FCD34D, #EF4444)' }} />
                     Affected Regions

@@ -29,35 +29,22 @@ export default function YieldPrediction() {
         setPredictedYield(null);
 
         try {
-            // Fetch weather — fallback gracefully if it fails
-            let weatherData = null;
-            try {
-                const weather = await getWeather(form.location || 'auto');
-                weatherData = weather.current;
-            } catch (weatherErr) {
-                console.warn('Weather fetch failed, proceeding without:', weatherErr);
-            }
-
-            const params = { ...form, weather: weatherData };
-
-            // Use local variables to capture streamed result (avoids stale closure)
-            let finalText = '';
-            let finalYield = null;
+            const weather = await getWeather(form.location || 'auto');
+            const params = { ...form, weather: weather.current };
 
             await getYieldPrediction(params, (text, done) => {
-                finalText = text;
                 setResult(text);
                 if (done) {
                     // Try to extract yield number from text
                     const match = text.match(/(\d{2,6})\s*(kg|kilograms)/i);
-                    finalYield = match ? parseInt(match[1]) : Math.round(Math.random() * 3000 + 2000);
-                    setPredictedYield(finalYield);
+                    if (match) setPredictedYield(parseInt(match[1]));
+                    else setPredictedYield(Math.round(Math.random() * 3000 + 2000));
                 }
             });
 
             setLoading(false);
 
-            // Save to Supabase (use local vars, NOT stale state)
+            // Save to Supabase
             if (user) {
                 try {
                     await saveYieldPrediction({
@@ -68,29 +55,28 @@ export default function YieldPrediction() {
                         disease_severity: form.diseaseSeverity,
                         irrigation_freq: form.irrigationFreq,
                         location: form.location,
-                        predicted_yield: finalYield,
-                        result_text: finalText,
+                        predicted_yield: predictedYield,
+                        result_text: result,
                         created_at: new Date().toISOString(),
                     });
-                } catch (err) { console.error('Save error:', err); }
+                } catch (err) { console.error(err); }
             }
         } catch (err) {
-            console.error('Yield prediction error:', err);
+            console.error(err);
             setLoading(false);
-            alert(`Yield prediction failed: ${err.message}\n\nPlease check your internet connection and try again.`);
         }
     };
 
-    const inputClass = "w-full px-4 py-3 bg-farm-card border border-farm-border rounded-lg text-farm-text font-dm text-sm input-animated focus:border-farm-accent";
-    const labelClass = "text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
+    const inputClass = "w-full px-4 py-3 bg-fm-bg-elevated border border-fm-border rounded-lg text-fm-text-primary font-dm text-sm input-animated focus:border-fm-accent";
+    const labelClass = "text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-1.5 block";
 
     return (
         <PageWrapper>
             <motion.div variants={staggerContainer} initial="initial" animate="animate" className="max-w-4xl mx-auto space-y-8">
                 <motion.div variants={staggerItem} className="space-y-1">
-                    <p className="text-sm text-farm-text-muted font-mono uppercase tracking-widest">AI Prediction</p>
-                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-farm-text">
-                        Yield<br /><span className="text-farm-accent">Prediction</span>
+                    <p className="text-sm text-fm-text-muted font-mono uppercase tracking-widest">AI Prediction</p>
+                    <h1 className="font-syne font-extrabold text-4xl md:text-5xl text-fm-text-primary">
+                        Yield<br /><span className="text-fm-accent">Prediction</span>
                     </h1>
                 </motion.div>
 
@@ -132,8 +118,8 @@ export default function YieldPrediction() {
 
                         <motion.div variants={staggerItem}>
                             <label className={labelClass}>Disease Severity: {form.diseaseSeverity}%</label>
-                            <input type="range" min="0" max="100" value={form.diseaseSeverity} onChange={(e) => handleChange('diseaseSeverity', parseInt(e.target.value))} className="w-full accent-farm-accent mt-2" />
-                            <div className="flex justify-between text-[10px] text-farm-text-muted font-mono mt-1">
+                            <input type="range" min="0" max="100" value={form.diseaseSeverity} onChange={(e) => handleChange('diseaseSeverity', parseInt(e.target.value))} className="w-full accent-fm-accent mt-2" />
+                            <div className="flex justify-between text-[10px] text-fm-text-muted font-mono mt-1">
                                 <span>None</span><span>Severe</span>
                             </div>
                         </motion.div>
@@ -145,7 +131,7 @@ export default function YieldPrediction() {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading}
-                            className="w-full py-4 bg-farm-accent text-farm-bg font-syne font-bold text-lg rounded-lg disabled:opacity-50"
+                            className="w-full py-4 bg-fm-accent text-fm-bg-base font-syne font-bold text-lg rounded-lg disabled:opacity-50"
                         >
                             {loading ? 'Predicting...' : 'Predict Yield'}
                         </motion.button>
@@ -155,16 +141,16 @@ export default function YieldPrediction() {
                 {loading && <LoadingSpinner text="Analyzing yield factors with AI..." />}
 
                 {predictedYield && (
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="bg-farm-card border-l-4 border-farm-accent p-8 rounded-r-lg text-center">
-                        <p className="text-xs text-farm-text-muted uppercase tracking-wider font-mono mb-2">Predicted Yield</p>
-                        <AnimatedNumber value={predictedYield} className="text-6xl md:text-7xl text-farm-accent" suffix=" kg/ha" duration={2500} />
+                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="bg-fm-bg-elevated border-l-4 border-fm-accent p-8 rounded-r-lg text-center">
+                        <p className="text-xs text-fm-text-muted uppercase tracking-wider font-mono mb-2">Predicted Yield</p>
+                        <AnimatedNumber value={predictedYield} className="text-6xl md:text-7xl text-fm-accent" suffix=" kg/ha" duration={2500} />
                     </motion.div>
                 )}
 
                 {result && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-farm-card border-l-4 border-farm-accent-secondary p-6 rounded-r-lg">
-                        <h3 className="font-syne font-bold text-lg text-farm-text mb-4">🤖 AI Yield Analysis</h3>
-                        <TypewriterText text={result} speed={10} className="text-sm text-farm-text-secondary leading-relaxed font-dm" />
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-fm-bg-elevated border-l-4 border-fm-accent-hover p-6 rounded-r-lg">
+                        <h3 className="font-syne font-bold text-lg text-fm-text-primary mb-4">🤖 AI Yield Analysis</h3>
+                        <TypewriterText text={result} speed={10} className="text-sm text-fm-text-secondary leading-relaxed font-dm" />
                     </motion.div>
                 )}
             </motion.div>

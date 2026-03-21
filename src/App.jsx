@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { useAuth } from './hooks/useAuth';
+import { AuthProvider } from './components/auth/AuthProvider';
 import useStore from './store/useStore';
 import Sidebar from './components/layout/Sidebar';
 import BottomNav from './components/layout/BottomNav';
@@ -21,15 +21,7 @@ import UrbanFarming from './pages/UrbanFarming';
 import Profile from './pages/Profile';
 
 function ProtectedRoute({ children }) {
-    const { user, loading } = useAuth();
-
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-farm-bg">
-                <LoadingSpinner text="Loading FarmFlux..." size="lg" />
-            </div>
-        );
-    }
+    const { user } = useStore();
 
     if (!user) {
         return <Navigate to="/login" replace />;
@@ -44,11 +36,17 @@ function AppLayout({ children }) {
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 768);
         window.addEventListener('resize', handleResize);
+        
+        // Ensure theme matches store on mount
+        if (useStore.getState().isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+        
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     return (
-        <div className="flex min-h-screen bg-farm-bg">
+        <div className="flex min-h-screen bg-fm-bg-base">
             {/* Sidebar — desktop only */}
             {!isMobile && <Sidebar />}
 
@@ -154,8 +152,10 @@ function AnimatedRoutes() {
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <AnimatedRoutes />
-        </BrowserRouter>
+        <AuthProvider>
+            <BrowserRouter>
+                <AnimatedRoutes />
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
